@@ -5,7 +5,7 @@ from dotenv import load_dotenv, find_dotenv
 # ① .env を最初に読み込む（親ディレクトリからの起動でも拾えるように）
 load_dotenv(find_dotenv(filename=".env", usecwd=True))
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.chat import router as chat_router
 
@@ -31,11 +31,26 @@ async def health():
     return {"status": "ok"}
 
 @app.get("/api/auth/roles")
-async def get_user_roles():
+async def get_user_roles(request: Request):
     """
     Azure Static Web Apps認証用のロール割り当てAPI
-    全ての認証済みユーザーに'authenticated'ロールを付与
+    許可されたGitHubユーザーのみ'authenticated'ロールを付与
     """
-    return {
-        "roles": ["authenticated"]
-    }
+    # 許可するGitHubユーザー名のリスト（環境変数で管理）
+    allowed_users_str = os.getenv("ALLOWED_GITHUB_USERS", "")
+    allowed_users = [user.strip() for user in allowed_users_str.split(",") if user.strip()]
+
+    # Azure SWAから送られてくるヘッダーからユーザー情報を取得
+    user_id = request.headers.get("x-ms-client-principal-id")
+    user_name = request.headers.get("x-ms-client-principal-name")
+
+    # 許可リストが空の場合は全員許可
+    if not allowed_users:
+        return {"roles": ["authenticated"]}
+
+    # ユーザー名が許可リストに含まれているかチェック
+    if user_name and user_name in allowed_users:
+        return {"roles": ["authenticated"]}
+
+    # 許可されていないユーザーは匿名扱い
+    return {"roles": ["anonymous"]}
