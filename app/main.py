@@ -44,13 +44,21 @@ async def get_user_roles(request: Request):
     user_id = request.headers.get("x-ms-client-principal-id")
     user_name = request.headers.get("x-ms-client-principal-name")
 
+    # デバッグログ
+    print(f"[AUTH] Headers: {dict(request.headers)}")
+    print(f"[AUTH] User ID: {user_id}, User Name: {user_name}")
+    print(f"[AUTH] Allowed users: {allowed_users}")
+
     # 許可リストが空の場合は全員許可
     if not allowed_users:
+        print("[AUTH] No allowlist - granting authenticated role")
         return {"roles": ["authenticated"]}
 
     # ユーザー名が許可リストに含まれているかチェック
     if user_name and user_name in allowed_users:
+        print(f"[AUTH] User {user_name} is in allowlist - granting authenticated role")
         return {"roles": ["authenticated"]}
 
     # 許可されていないユーザーは匿名扱い
+    print(f"[AUTH] User {user_name} NOT in allowlist - denying access")
     return {"roles": ["anonymous"]}
