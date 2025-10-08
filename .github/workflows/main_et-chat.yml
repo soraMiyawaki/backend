@@ -66,6 +66,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'et-chat'
+          app-name: 'et-chat-cmcbc3cugwgme7cr'
           slot-name: 'Production'
           
