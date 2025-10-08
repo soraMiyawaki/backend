@@ -12,9 +12,9 @@ from app.routers.chat import router as chat_router
 app = FastAPI()
 
 # ② CORS 設定（.env の FRONTEND_ORIGIN を利用）
-origins = [
-    os.getenv("FRONTEND_ORIGIN", "http://localhost:5173"),
-]
+# カンマ区切りで複数のオリジンをサポート
+frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
+origins = [origin.strip() for origin in frontend_origin.split(",")]
 
 app.add_middleware(
     CORSMiddleware,
