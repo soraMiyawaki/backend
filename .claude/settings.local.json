@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Exitotrinity-13/my-app2/**)",
+      "Read(//c/Users/Exitotrinity-13/my-app2/src/pages/**)",
+      "Read(//c/Users/Exitotrinity-13/my-app2/src/lib/**)",
+      "Read(//c/Users/Exitotrinity-13/my-app2/src/**)",
+      "Bash(git checkout:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Azure Static Web Apps + App Service デプロイ設定\n\n## 変更内容\n\n### GitHub Actions ワークフロー\n- `.github/workflows/swa.yml` - フロントエンドをAzure SWAにデプロイ\n  - pnpm v9対応\n  - `/api/*` パスをバックエンドへプロキシ\n- `.github/workflows/appservice.yml` - バックエンドをApp Serviceにデプロイ\n  - Python 3.10\n  - gunicorn + uvicorn起動\n\n### 設定ファイル\n- `.env.production` - 本番環境のAPI Base URL設定\n- `public/staticwebapp.config.json` - SWA設定\n  - `/api/*` ルーティング\n  - SPAフォールバック\n  - セキュリティヘッダー\n\n### 削除\n- `.github/workflows/deploy.yml` - GitHub Pagesワークフロー（不要）\n\n## 必要なシークレット\n- `AZURE_SWA_TOKEN` - Static Web Apps Deployment Token\n- `AZURE_WEBAPP_PUBLISH_PROFILE` - App Service発行プロファイル\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git merge:*)",
+      "Bash(git pull:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

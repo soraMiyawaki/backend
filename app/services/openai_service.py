@@ -8,9 +8,9 @@ OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "https://api.openai.com/v1")
 MODEL = os.getenv("MODEL", "gpt-4o-mini")
 
 def _auth_headers() -> Dict[str, str]:
-    key = os.getenv("OPENAI_API_KEY")  # 呼び出し毎に取得（import時に固定しない）
+    key = os.getenv("OPENAI_API_KEY")
     if not key:
-        raise RuntimeError("OPENAI_API_KEY が設定されていません（.env を確認）")
+        raise RuntimeError("OpenAI API key is missing")
     return {
         "Authorization": f"Bearer {key}",
         "Content-Type": "application/json",
@@ -20,7 +20,10 @@ async def complete_once(
     messages: List[Dict[str, Any]],
     temperature: float = 0.3,
     max_tokens: int = 512,
-) -> str:
+) -> Dict[str, Any]:
+    """
+    Returns dict with 'content' and optionally 'reasoning' (for o1 models)
+    """
     url = f"{OPENAI_API_BASE.rstrip('/')}/chat/completions"
     payload = {
         "model": MODEL,
@@ -33,7 +36,22 @@ async def complete_once(
         r = await client.post(url, headers=_auth_headers(), json=payload)
         r.raise_for_status()
         j = r.json()
-        return j["choices"][0]["message"]["content"]
+        choice = j["choices"][0]
+        message = choice["message"]
+
+        result = {"content": message["content"]}
+
+        # o1 models return reasoning_content
+        if "reasoning_content" in message and message["reasoning_content"]:
+            result["reasoning"] = message["reasoning_content"]
+
+        # Extract thinking time from usage if available
+        if "usage" in j and "completion_tokens_details" in j["usage"]:
+            details = j["usage"]["completion_tokens_details"]
+            if "reasoning_tokens" in details:
+                result["reasoning_tokens"] = details["reasoning_tokens"]
+
+        return result
 
 async def stream_completion(
     messages: List[Dict[str, Any]],
