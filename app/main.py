@@ -29,3 +29,13 @@ app.include_router(chat_router)
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+@app.get("/api/auth/roles")
+async def get_user_roles():
+    """
+    Azure Static Web Apps認証用のロール割り当てAPI
+    全ての認証済みユーザーに'authenticated'ロールを付与
+    """
+    return {
+        "roles": ["authenticated"]
+    }
