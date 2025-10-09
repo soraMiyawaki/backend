@@ -8,6 +8,7 @@ load_dotenv(find_dotenv(filename=".env", usecwd=True))
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.chat import router as chat_router
+from app.routers.attendance import router as attendance_router
 
 app = FastAPI()
 
@@ -25,6 +26,7 @@ app.add_middleware(
 )
 
 app.include_router(chat_router)
+app.include_router(attendance_router)
 
 @app.get("/health")
 async def health():

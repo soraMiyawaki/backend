@@ -12,7 +12,18 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git merge:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(gh secret:*)",
+      "Bash(pnpm build:*)",
+      "Bash(git rebase:*)",
+      "Bash(cat:*)",
+      "Bash(curl -s https://et-chat-cmcbc3cugwgme7cr.japanwest-01.azurewebsites.net/health --max-time 10)",
+      "Read(//c/Users/Exitotrinity-13/OneDrive/Desktop/ひな型/**)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(uvicorn:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
