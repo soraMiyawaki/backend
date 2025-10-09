@@ -8,7 +8,14 @@ load_dotenv(find_dotenv(filename=".env", usecwd=True))
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.chat import router as chat_router
-from app.routers.attendance import router as attendance_router
+
+# Try to import attendance router, but don't fail if it's not available
+try:
+    from app.routers.attendance import router as attendance_router
+    attendance_available = True
+except Exception as e:
+    print(f"Warning: Attendance router not available: {e}")
+    attendance_available = False
 
 app = FastAPI()
 
@@ -26,7 +33,13 @@ app.add_middleware(
 )
 
 app.include_router(chat_router)
-app.include_router(attendance_router)
+
+# Only include attendance router if it's available
+if attendance_available:
+    app.include_router(attendance_router)
+    print("Attendance router enabled")
+else:
+    print("Attendance router disabled")
 
 @app.get("/health")
 async def health():
