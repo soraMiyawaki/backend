@@ -9,13 +9,17 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.chat import router as chat_router
 
-# Try to import attendance router, but don't fail if it's not available
-try:
-    from app.routers.attendance import router as attendance_router
-    attendance_available = True
-except Exception as e:
-    print(f"Warning: Attendance router not available: {e}")
-    attendance_available = False
+# Temporarily disable attendance feature
+# TODO: Re-enable after fixing openpyxl dependency issue
+attendance_available = False
+
+# # Try to import attendance router, but don't fail if it's not available
+# try:
+#     from app.routers.attendance import router as attendance_router
+#     attendance_available = True
+# except Exception as e:
+#     print(f"Warning: Attendance router not available: {e}")
+#     attendance_available = False
 
 app = FastAPI()
 
