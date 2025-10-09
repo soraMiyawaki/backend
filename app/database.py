@@ -36,10 +36,16 @@ def init_db():
                 title TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                conversation_tree TEXT NOT NULL,
-                INDEX idx_user_id (user_id),
-                INDEX idx_updated_at (updated_at)
+                conversation_tree TEXT NOT NULL
             )
+        """)
+
+        # インデックス作成
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_user_id ON conversations(user_id)
+        """)
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_updated_at ON conversations(updated_at)
         """)
 
         print("[DB] Database initialized")
